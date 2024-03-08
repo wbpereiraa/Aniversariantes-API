@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE email (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
     email TEXT NOT NULL
