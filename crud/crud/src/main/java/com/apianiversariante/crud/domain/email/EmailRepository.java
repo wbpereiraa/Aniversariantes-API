@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface EmailRepository extends JpaRepository<Email, String> {
     List<Email> findAllByActiveTrue();
+
+    boolean existsByEmail(String email);
 }

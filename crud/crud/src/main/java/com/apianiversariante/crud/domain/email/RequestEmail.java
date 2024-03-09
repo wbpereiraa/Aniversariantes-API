@@ -14,4 +14,7 @@ public record RequestEmail(
         @NotNull
         String email
 ) {
+        public String getEmail() {
+                return email();
+        }
 }

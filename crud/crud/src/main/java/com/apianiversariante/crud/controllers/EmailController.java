@@ -26,9 +26,12 @@ public class EmailController {
 
     @PostMapping
     public ResponseEntity registerEmail(@RequestBody @Valid RequestEmail data){
+        if(emailExists(data.getEmail())){
+            return ResponseEntity.badRequest().body("Email já cadastrado!");
+        }
         Email newEmail = new Email(data);
         repository.save(newEmail);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Email cadastrado com sucesso!");
     }
 
     @PutMapping
@@ -56,6 +59,10 @@ public class EmailController {
         } else {
             throw new EntityNotFoundException();
         }
+    }
+
+    private boolean emailExists(String email) {
+        return repository.existsByEmail(email);
     }
 
 }
