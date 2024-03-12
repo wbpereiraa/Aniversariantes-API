@@ -12,7 +12,9 @@ public record RequestEmail(
         @NotBlank
         String name,
         @NotNull
-        String email
+        String email,
+        Integer cupom
+
 ) {
         public String getEmail() {
                 return email();

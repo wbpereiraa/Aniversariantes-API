@@ -20,9 +20,12 @@ public class Email {
 
     private Boolean active;
 
+    private Integer cupom;
+
     public Email(RequestEmail requestEmail){
         this.name = requestEmail.name();
         this.email = requestEmail.email();
+        this.cupom = requestEmail.cupom();
         this.active = true;
     }
 }
