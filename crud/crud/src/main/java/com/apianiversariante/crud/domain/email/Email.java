@@ -3,6 +3,8 @@ package com.apianiversariante.crud.domain.email;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Table(name="email")
 @Entity(name="email")
 @Getter
@@ -27,5 +29,12 @@ public class Email {
         this.email = requestEmail.email();
         this.cupom = requestEmail.cupom();
         this.active = true;
+    }
+
+    public void setDataGeracaoCupom(LocalDate dataGeracaoCupom) {
+    }
+
+    public LocalDate getDataGeracaoCupom() {
+        return LocalDate.now();
     }
 }

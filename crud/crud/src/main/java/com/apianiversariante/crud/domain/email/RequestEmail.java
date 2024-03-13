@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public record RequestEmail(
         String id,
-
         @NotBlank
         String name,
         @NotNull

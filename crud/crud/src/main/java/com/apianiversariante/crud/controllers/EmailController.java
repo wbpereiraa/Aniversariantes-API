@@ -31,24 +31,30 @@ public class EmailController {
     }
     */
 
-    //Método onde se o email já estiver no BD o cupom será gerado e enviado com válidade de 15 dias
+    //Método onde se o email já estiver no BD o cupom será gerado e enviado
     @PostMapping
     public ResponseEntity registerEmail(@RequestBody @Valid RequestEmail data) {
-        if (emailExists(data.getEmail())) {
+        Optional<Email> existingEmail = repository.findByEmail(data.getEmail());
+        LocalDate dataGeracaoCupom = LocalDate.now();
+
+        if (existingEmail.isPresent()) {
+            Email email = existingEmail.get();
             Random cupom = new Random();
             StringBuilder cupomNumber = new StringBuilder();
             for (int i = 0; i < 5; i++) {
                 cupomNumber.append(cupom.nextInt(99));
             }
-            /*LocalDate dataAtual = LocalDate.now();
-            LocalDate dataValidade = dataAtual.plusDays(15);
-            String dataValidadeFormatada = dataValidade.format(DateTimeFormatter.ISO_DATE);*/
+            String generatedCupom = cupomNumber.toString();
+            email.setCupom(Integer.valueOf(generatedCupom));
+            email.setDataGeracaoCupom(dataGeracaoCupom);
+            repository.save(email);
 
-            String cupomMessage = "EMAIL ENVIADO COM SUCESSO! O número do seu cupom é Nº: " + cupomNumber.toString();
+            String cupomMessage = "EMAIL ENVIADO COM SUCESSO! O número do seu cupom é Nº: " + generatedCupom;
+
             return ResponseEntity.ok().body(cupomMessage);
         } else {
 
-            /*Caso queira cadastrar o email não encontrado é só fazer essa alteração abaixo*/
+            /*Cadastrar o email não encontrado sem cupom*/
             Email newEmail = new Email(data);
             repository.save(newEmail);
             return ResponseEntity.ok(newEmail);
@@ -57,22 +63,25 @@ public class EmailController {
         }
     }
 
-    //Método que retorna os emails pelo id do usuário
-    @GetMapping("/{id}")
-    public ResponseEntity getAllEmails(@PathVariable String id){
+    //Método que retorna o cupom e validade pelo id do usuário
+    @GetMapping("{id}")
+    public ResponseEntity getCupomValidity(@PathVariable String id) {
         Optional<Email> optionalEmail = repository.findById(id);
         if (optionalEmail.isPresent()) {
             Email email = optionalEmail.get();
+            String cupom = String.valueOf(email.getCupom());
+            LocalDate dataGeracaoCupom = email.getDataGeracaoCupom();
             LocalDate dataAtual = LocalDate.now();
-            LocalDate dataValidade = dataAtual.plusDays(15);
-            String dataValidadeFormatada = dataValidade.format(DateTimeFormatter.ISO_DATE);
-            //System.out.println("A validade do seu cupom é até o dia: " + dataValidadeFormatada);
+            LocalDate dataValidadeLimite = dataAtual.plusDays(15);
+            //LocalDate diasFaltantesCupom = dataGeracaoCupom.compareTo(LocalDate.now());
 
-            return ResponseEntity.ok().body("Email Válido! Validade do cupom: " + dataValidadeFormatada);
-
-
+            if (dataGeracaoCupom.isBefore(dataValidadeLimite)) {
+                return ResponseEntity.ok("O cupom está dentro da validade de 15 dias.");
+            } else {
+                return ResponseEntity.ok("O cupom não está dentro da validade de 15 dias.");
+            }
         } else {
-            throw new EntityNotFoundException("Email Inválido!");
+            throw new EntityNotFoundException();
         }
     }
 
@@ -95,9 +104,8 @@ public class EmailController {
     public ResponseEntity deleteEmail(@PathVariable String id){
         Optional<Email> optionalEmail = repository.findById(id);
         if (optionalEmail.isPresent()) {
-            Email email = optionalEmail.get();
-            email.setActive(false);
-            return ResponseEntity.noContent().build();
+            repository.deleteById(id);
+            return ResponseEntity.ok("Deletado com sucesso!");
         } else {
             throw new EntityNotFoundException();
         }
