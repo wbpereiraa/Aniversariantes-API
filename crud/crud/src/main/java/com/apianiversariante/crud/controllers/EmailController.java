@@ -69,11 +69,10 @@ public class EmailController {
         Optional<Email> optionalEmail = repository.findById(id);
         if (optionalEmail.isPresent()) {
             Email email = optionalEmail.get();
-            String cupom = String.valueOf(email.getCupom());
             LocalDate dataGeracaoCupom = email.getDataGeracaoCupom();
             LocalDate dataAtual = LocalDate.now();
             LocalDate dataValidadeLimite = dataAtual.plusDays(15);
-            //LocalDate diasFaltantesCupom = dataGeracaoCupom.compareTo(LocalDate.now());
+
 
             if (dataGeracaoCupom.isBefore(dataValidadeLimite)) {
                 return ResponseEntity.ok("O cupom está dentro da validade de 15 dias.");
