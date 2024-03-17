@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import java.time.format.DateTimeFormatter;
+
+
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 import java.util.Optional;
@@ -46,7 +48,7 @@ public class EmailController {
             }
             String generatedCupom = cupomNumber.toString();
             email.setCupom(Integer.valueOf(generatedCupom));
-            email.setDataGeracaoCupom(dataGeracaoCupom);
+            email.setCupom_Data(dataGeracaoCupom);
             repository.save(email);
 
             String cupomMessage = "EMAIL ENVIADO COM SUCESSO! O número do seu cupom é Nº: " + generatedCupom;
@@ -69,13 +71,14 @@ public class EmailController {
         Optional<Email> optionalEmail = repository.findById(id);
         if (optionalEmail.isPresent()) {
             Email email = optionalEmail.get();
-            LocalDate dataGeracaoCupom = email.getDataGeracaoCupom();
+            LocalDate dataGeracaoCupom = email.getCupom_Data();
             LocalDate dataAtual = LocalDate.now();
-            LocalDate dataValidadeLimite = dataAtual.plusDays(15);
-
+            LocalDate dataValidadeLimite = dataGeracaoCupom.plusDays(15);
 
             if (dataGeracaoCupom.isBefore(dataValidadeLimite)) {
-                return ResponseEntity.ok("O cupom está dentro da validade de 15 dias.");
+                long diasRestantesCupom = ChronoUnit.DAYS.between(dataAtual, dataValidadeLimite);
+
+                return ResponseEntity.ok("O cupom é válido ate dia " + dataValidadeLimite + "." + "Faltam " + diasRestantesCupom + " dias para vencimento do cupom.");
             } else {
                 return ResponseEntity.ok("O cupom não está dentro da validade de 15 dias.");
             }

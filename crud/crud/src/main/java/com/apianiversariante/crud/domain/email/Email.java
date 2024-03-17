@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Table(name="email")
 @Entity(name="email")
@@ -24,17 +25,21 @@ public class Email {
 
     private Integer cupom;
 
+    private LocalDate cupom_data;
+
     public Email(RequestEmail requestEmail){
         this.name = requestEmail.name();
         this.email = requestEmail.email();
         this.cupom = requestEmail.cupom();
+        this.cupom_data = LocalDate.now();
         this.active = true;
     }
 
-    public void setDataGeracaoCupom(LocalDate dataGeracaoCupom) {
+    public void setCupom_Data(LocalDate cupom_data) {
+        this.cupom_data = cupom_data;
     }
 
-    public LocalDate getDataGeracaoCupom() {
-        return LocalDate.now();
+    public LocalDate getCupom_Data() {
+        return this.cupom_data;
     }
 }
