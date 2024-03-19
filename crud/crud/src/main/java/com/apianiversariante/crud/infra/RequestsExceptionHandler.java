@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RequestsExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionDTO> threat404(){
-        ExceptionDTO response = new ExceptionDTO("Cliente não cadastrado!", 404);
+        ExceptionDTO response = new ExceptionDTO("Erro no cadastramento!", 404);
         return ResponseEntity.badRequest().body(response);
     }
 }

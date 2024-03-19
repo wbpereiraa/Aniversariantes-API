@@ -2,9 +2,7 @@ package com.apianiversariante.crud.domain.email;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 @Table(name="email")
 @Entity(name="email")
@@ -21,8 +19,6 @@ public class Email {
 
     private String email;
 
-    private Boolean active;
-
     private Integer cupom;
 
     private LocalDate cupom_data;
@@ -32,7 +28,6 @@ public class Email {
         this.email = requestEmail.email();
         this.cupom = requestEmail.cupom();
         this.cupom_data = LocalDate.now();
-        this.active = true;
     }
 
     public void setCupom_Data(LocalDate cupom_data) {

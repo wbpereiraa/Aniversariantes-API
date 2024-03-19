@@ -1,6 +1,5 @@
 package com.apianiversariante.crud.controllers;
 
-
 import com.apianiversariante.crud.domain.email.Email;
 import com.apianiversariante.crud.domain.email.EmailRepository;
 import com.apianiversariante.crud.domain.email.RequestEmail;
@@ -8,14 +7,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
-
 import java.util.Optional;
 
 @RestController
@@ -23,15 +18,6 @@ import java.util.Optional;
 public class EmailController {
     @Autowired
     private EmailRepository repository;
-
-    /*
-    //Método que retorna todos emails no Banco de Dados!
-    @GetMapping
-    public ResponseEntity getAllEmails(){
-        var allEmails = repository.findAllByActiveTrue();
-        return ResponseEntity.ok(allEmails);
-    }
-    */
 
     //Método onde se o email já estiver no BD o cupom será gerado e enviado
     @PostMapping
@@ -56,12 +42,11 @@ public class EmailController {
             return ResponseEntity.ok().body(cupomMessage);
         } else {
 
-            /*Cadastrar o email não encontrado sem cupom*/
+            /*Cadastra o email não encontrado sem número do cupom*/
             Email newEmail = new Email(data);
             repository.save(newEmail);
             return ResponseEntity.ok(newEmail);
 
-            //throw new EntityNotFoundException();
         }
     }
 
@@ -78,43 +63,12 @@ public class EmailController {
             if (dataGeracaoCupom.isBefore(dataValidadeLimite)) {
                 long diasRestantesCupom = ChronoUnit.DAYS.between(dataAtual, dataValidadeLimite);
 
-                return ResponseEntity.ok("O cupom é válido ate dia " + dataValidadeLimite + "." + "Faltam " + diasRestantesCupom + " dias para vencimento do cupom.");
+                return ResponseEntity.ok("EMAIL ATIVO! - O cupom é válido ate dia " + dataValidadeLimite + "." + "Faltam " + diasRestantesCupom + " dias para vencimento do cupom.");
             } else {
-                return ResponseEntity.ok("O cupom não está dentro da validade de 15 dias.");
+                return ResponseEntity.ok("EMAIL INATIVO - O cupom não está dentro da validade de 15 dias.");
             }
         } else {
             throw new EntityNotFoundException();
         }
     }
-
-    @PutMapping
-    @Transactional
-    public ResponseEntity updateEmail(@RequestBody @Valid RequestEmail data){
-        Optional<Email> optionalEmail = repository.findById(data.id());
-        if (optionalEmail.isPresent()) {
-            Email email = optionalEmail.get();
-            email.setName(data.name());
-            email.setEmail(data.email());
-            return ResponseEntity.ok(email);
-        } else {
-            throw new EntityNotFoundException();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    @Transactional
-    public ResponseEntity deleteEmail(@PathVariable String id){
-        Optional<Email> optionalEmail = repository.findById(id);
-        if (optionalEmail.isPresent()) {
-            repository.deleteById(id);
-            return ResponseEntity.ok("Deletado com sucesso!");
-        } else {
-            throw new EntityNotFoundException();
-        }
-    }
-
-    private boolean emailExists(String email) {
-        return repository.existsByEmail(email);
-    }
-
 }
