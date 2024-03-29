@@ -37,7 +37,7 @@ A API poderá ser visualizada com Swagger em [localhost:8080/swagger-ui.html](ht
 
 ## API Endpoints
 
-Para fazer as requisições HTTP abaixo, foi utilizada a ferramenta Insomnia [httpie](https://insomnia.rest/download):
+Para fazer as requisições HTTP abaixo, foi utilizada a ferramenta Insomnia (https://insomnia.rest/download):
 
 - Consultar se o e-mail está cadastrado e gera o número do cupom, se não tiver cadastrado, o cadastro é realizado automaticamente
 ```
