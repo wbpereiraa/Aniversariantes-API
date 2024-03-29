@@ -60,9 +60,8 @@ public class EmailController {
             LocalDate dataAtual = LocalDate.now();
             LocalDate dataValidadeLimite = dataGeracaoCupom.plusDays(15);
 
-            if (dataGeracaoCupom.isBefore(dataValidadeLimite)) {
+            if (dataAtual.isBefore(dataValidadeLimite)) {
                 long diasRestantesCupom = ChronoUnit.DAYS.between(dataAtual, dataValidadeLimite);
-
                 return ResponseEntity.ok("EMAIL ATIVO! - O cupom é válido ate dia " + dataValidadeLimite + "." + "Faltam " + diasRestantesCupom + " dias para vencimento do cupom.");
             } else {
                 return ResponseEntity.ok("EMAIL INATIVO - O cupom não está dentro da validade de 15 dias.");
