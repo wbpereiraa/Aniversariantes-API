@@ -1,5 +1,5 @@
 <h1 align="center">
-  API geradora de cupons para aniversariantes
+  API geradora de cupons para aniversariantes.
 </h1>
 
 API para gerar cupons utilizando os princípios do (CRUD) e utilizando como operações principais o Create(POST) e o Read(GET).
