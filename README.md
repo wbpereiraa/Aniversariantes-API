@@ -11,6 +11,7 @@ API para gerar cupons utilizando os princípios do (CRUD) e utilizando como oper
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 - [SpringDoc OpenAPI 3](https://springdoc.org/v2/#spring-webflux-support)
 - [PostgreSQL](https://www.postgresql.org/download/)
+- [Flyway](https://www.red-gate.com/products/flyway/editions)
 
 ## Práticas adotadas
 
@@ -20,6 +21,7 @@ API para gerar cupons utilizando os princípios do (CRUD) e utilizando como oper
 - Injeção de Dependências
 - Tratamento de respostas de erro
 - Geração automática do Swagger com a OpenAPI 3
+- Migrations
 
 ## Como Executar
 
